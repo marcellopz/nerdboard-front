@@ -46,6 +46,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
           label="Email"
           type="email"
           variant="outlined"
+          autoComplete="email"
           value={formState.email}
           onChange={(e) =>
             setFormState({
@@ -60,6 +61,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
           label="Password"
           type="password"
           variant="outlined"
+          autoComplete="current-password"
           value={formState.password}
           onChange={(e) =>
             setFormState({

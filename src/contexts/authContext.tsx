@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   User,
   updateProfile,
+  sendEmailVerification,
   // updateProfile,
 } from "firebase/auth";
 import React, { createContext, useState, useEffect, useContext } from "react";
@@ -79,6 +80,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   ) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        sendEmailVerification(userCredential.user);
         updateProfile(userCredential.user, {
           displayName: displayName,
         });

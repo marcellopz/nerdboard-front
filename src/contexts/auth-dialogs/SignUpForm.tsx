@@ -54,6 +54,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
           label="Email"
           type="email"
           variant="outlined"
+          autoComplete="email"
           value={formState.email}
           onChange={(e) =>
             setFormState({
@@ -68,6 +69,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
           label="Password"
           type="password"
           variant="outlined"
+          autoComplete="current-password"
           value={formState.password}
           onChange={(e) =>
             setFormState({
@@ -82,6 +84,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
           label="Confirm Password"
           type="password"
           variant="outlined"
+          autoComplete="confirm-password"
           value={formState.confirmPassword}
           onChange={(e) =>
             setFormState({
@@ -96,6 +99,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
           id="display-name"
           label="Display Name"
           variant="outlined"
+          autoComplete="display-name"
           value={formState.displayName}
           onChange={(e) =>
             setFormState({
