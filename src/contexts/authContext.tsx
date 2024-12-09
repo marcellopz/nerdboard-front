@@ -13,6 +13,7 @@ import {
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import auth from "./firebase/firebase";
+import axiosInstance from "../utils/axios";
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -49,10 +50,17 @@ export const AuthContext = createContext<AuthContextType>({
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
+  const [idToken, setIdToken] = useState<string | null>(null);
 
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
       setAuthUser(user);
+      if (user)
+        user?.getIdToken().then((token) => {
+          setIdToken(token);
+        });
+      else setIdToken(null);
+
       setAuthLoading(false);
     });
 
@@ -60,6 +68,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       listen();
     };
   }, []);
+
+  // Sempre que idToken mudar, atualiza o cabeçalho Authorization
+  useEffect(() => {
+    if (idToken) {
+      axiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${idToken}`;
+    } else {
+      delete axiosInstance.defaults.headers.common["Authorization"];
+    }
+  }, [idToken]);
 
   // const signInGoogle = async () => {
   //   signInWithPopup(auth, provider).catch((error) => {
