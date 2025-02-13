@@ -13,7 +13,7 @@ import {
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import auth from "./firebase/firebase";
-import axiosInstance from "../utils/axios";
+import axiosInstance from "../service/axios";
 
 export const useAuth = () => {
   return useContext(AuthContext);
