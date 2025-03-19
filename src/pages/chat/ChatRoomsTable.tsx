@@ -22,6 +22,7 @@ function ChatRoomsTable() {
             <TableCell>ID</TableCell>
             <TableCell>Room name</TableCell>
             <TableCell>Members</TableCell>
+            <TableCell>Created by</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -34,7 +35,7 @@ function ChatRoomsTable() {
           )}
           {chatRooms.map((row) => (
             <TableRow
-              key={row.name}
+              key={row.roomId}
               sx={{
                 "&:last-child td, &:last-child th": { border: 0 },
                 cursor: "pointer",
@@ -43,17 +44,20 @@ function ChatRoomsTable() {
                 },
               }}
               onClick={() => {
-                navigate("/chat/" + row.id);
+                navigate("/chat/" + row.roomId);
               }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
+                {row.roomId}
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.roomName}
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.users.length}
+                {Object.keys(row.users).length}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {row.createdBy}
               </TableCell>
             </TableRow>
           ))}

@@ -1,9 +1,20 @@
 import { CssBaseline, GlobalStyles, ThemeProvider } from "@mui/material";
-import AuthProvider from "./contexts/authContext";
 import AppRoutes from "./routes/routes";
 import { theme } from "./config/themeOptions";
 
 function App() {
+  // const { idToken } = useAuth();
+  // const { connectSocket, disconnectSocket } = useSocketStore();
+
+  // useEffect(() => {
+  //   if (idToken) {
+  //     connectSocket(idToken);
+  //     return () => disconnectSocket();
+  //   } else {
+  //     disconnectSocket();
+  //   }
+  // }, [idToken]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -14,9 +25,7 @@ function App() {
           },
         }}
       />
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
+      <AppRoutes />
     </ThemeProvider>
   );
 }

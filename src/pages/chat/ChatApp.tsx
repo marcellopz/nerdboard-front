@@ -1,50 +1,29 @@
-import { useEffect, useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { useAuth } from "../../contexts/authContext";
-import ChatRoomsTable from "./ChatRoomsTable";
-import CreateRoomDialog from "./CreateRoomDialog";
-import { useNavigate } from "react-router-dom";
-import useChatStore from "../../store/useChatStore";
-import NerdboardBox from "../../components/NerdboardBox";
+import { useParams } from "react-router-dom";
+import useRoomHubStore from "../../store/useRoomHubStore";
+import ChatHub from "./ChatHub";
+import ChatRoom from "./room/ChatRoom";
 
 function ChatApp() {
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const { authUser } = useAuth();
-  const { fetchChatRooms, createChatRoom } = useChatStore();
-  const navigate = useNavigate();
+  const { idToken } = useAuth();
+  const { roomId } = useParams();
+  const { connectToRoomHub, disconnectFromRoomHub } = useRoomHubStore();
 
   useEffect(() => {
-    if (authUser) fetchChatRooms();
-  }, [authUser]);
-
-  async function onCreateRoom(roomName: string) {
-    console.log("Creating room", roomName);
-    const result = await createChatRoom(roomName);
-    if (result) {
-      navigate(`/chat/${result.id}`);
+    if (idToken) {
+      connectToRoomHub(idToken);
+      return () => disconnectFromRoomHub();
+    } else {
+      disconnectFromRoomHub();
     }
+  }, [connectToRoomHub, idToken]);
+
+  if (roomId) {
+    return <ChatRoom />;
   }
 
-  return (
-    <>
-      <NerdboardBox>
-        <Box className="flex justify-between items-center m-4">
-          <Typography variant="h5" gutterBottom>
-            Chat Rooms
-          </Typography>
-          <Button variant="contained" onClick={() => setCreateDialogOpen(true)}>
-            Create
-          </Button>
-        </Box>
-        <ChatRoomsTable />
-      </NerdboardBox>
-      <CreateRoomDialog
-        open={createDialogOpen}
-        onClose={() => setCreateDialogOpen(false)}
-        onCreate={onCreateRoom}
-      />
-    </>
-  );
+  return <ChatHub />;
 }
 
 export default ChatApp;

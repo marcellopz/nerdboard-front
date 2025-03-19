@@ -1,14 +1,9 @@
-import React from "react";
-import SignInForm from "../../contexts/auth-dialogs/SignInForm";
-import SignUpForm from "../../contexts/auth-dialogs/SignUpForm";
 import { useAuth } from "../../contexts/authContext";
 import { Button, Typography, Box } from "@mui/material";
 
 function UserSection() {
-  const [openSignIn, setOpenSignIn] = React.useState(false);
-  const [openSignUp, setOpenSignUp] = React.useState(false);
-  const { authUser, signOutFromWebsite } = useAuth();
-  console.log(authUser);
+  const { authUser, signOutFromWebsite, setOpenSignIn, setOpenSignUp } =
+    useAuth();
 
   return (
     <Box>
@@ -52,8 +47,6 @@ function UserSection() {
           </Button>
         </Box>
       )}
-      <SignUpForm open={openSignUp} onClose={() => setOpenSignUp(false)} />
-      <SignInForm open={openSignIn} onClose={() => setOpenSignIn(false)} />
     </Box>
   );
 }

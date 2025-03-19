@@ -14,6 +14,8 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import auth from "./firebase/firebase";
 import axiosInstance from "../service/axios";
+import SignUpForm from "./auth-dialogs/SignUpForm";
+import SignInForm from "./auth-dialogs/SignInForm";
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -30,6 +32,9 @@ interface AuthContextType {
   signInEmailPwd: (email: string, password: string) => void;
   // signInGoogle: () => void;
   authLoading: boolean;
+  idToken: string | null;
+  setOpenSignIn: (open: boolean) => void;
+  setOpenSignUp: (open: boolean) => void;
 }
 
 interface AuthProviderProps {
@@ -45,12 +50,17 @@ export const AuthContext = createContext<AuthContextType>({
   signInEmailPwd: () => {},
   // signInGoogle: () => {},
   authLoading: true,
+  idToken: null,
+  setOpenSignIn: () => {},
+  setOpenSignUp: () => {},
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState<boolean>(true);
   const [idToken, setIdToken] = useState<string | null>(null);
+  const [openSignUp, setOpenSignUp] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
 
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
@@ -130,9 +140,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signInEmailPwd,
         // signInGoogle,
         authLoading,
+        idToken,
+        setOpenSignIn,
+        setOpenSignUp,
       }}
     >
       {children}
+      <SignUpForm open={openSignUp} onClose={() => setOpenSignUp(false)} />
+      <SignInForm open={openSignIn} onClose={() => setOpenSignIn(false)} />
     </AuthContext.Provider>
   );
 };

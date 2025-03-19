@@ -1,9 +1,11 @@
 import { Avatar, Box, Divider, Typography } from "@mui/material";
 import { FunctionComponent } from "react";
-import { ChatUser } from "../types";
 
 interface ChatMemberListProps {
-  users: ChatUser[];
+  users: string[] | undefined;
+  // users?: {
+  //   [key: string]: ChatUser;
+  // };
 }
 
 const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({ users }) => {
@@ -23,7 +25,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({ users }) => {
           fontSize: "1rem",
         }}
       >
-        {users.length} Online
+        {users ? users.length : 0} Online
       </Typography>
       <Divider />
       <Box
@@ -34,30 +36,57 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({ users }) => {
           gap: "8px",
         }}
       >
-        {users.map((user) => (
-          <Box
-            key={user.username}
-            sx={{
-              display: "flex",
-              gap: "8px",
-              alignItems: "center",
-            }}
-          >
-            <Avatar
-              sx={{ width: 32, height: 32 }}
-              alt={user.username}
-              src="/static/images/avatar/2.jpg" // implementar avatar
-            />
-            <Typography
-              color={"primary"}
+        {users &&
+          users.map((user) => (
+            <Box
+              key={user}
               sx={{
-                fontSize: "1rem",
+                display: "flex",
+                gap: "8px",
+                alignItems: "center",
               }}
             >
-              {user.username}
-            </Typography>
-          </Box>
-        ))}
+              <Avatar
+                sx={{ width: 32, height: 32 }}
+                alt={user}
+                src="/static/images/avatar/2.jpg" // implementar avatar
+              />
+              <Typography
+                color={"primary"}
+                sx={{
+                  fontSize: "1rem",
+                }}
+              >
+                {user}
+              </Typography>
+            </Box>
+          ))}
+        {/* Para quando users for um objeto */}
+        {/* {users &&
+          Object.entries(users).map(([id, user]) => (
+            <Box
+              key={user.name}
+              sx={{
+                display: "flex",
+                gap: "8px",
+                alignItems: "center",
+              }}
+            >
+              <Avatar
+                sx={{ width: 32, height: 32 }}
+                alt={user.name}
+                src="/static/images/avatar/2.jpg" // implementar avatar
+              />
+              <Typography
+                color={"primary"}
+                sx={{
+                  fontSize: "1rem",
+                }}
+              >
+                {user.name}
+              </Typography>
+            </Box>
+          ))} */}
       </Box>
     </Box>
   );
