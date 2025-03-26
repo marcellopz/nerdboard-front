@@ -20,10 +20,17 @@ export type ChatUser = {
 
 function ChatRoom() {
   const { roomId } = useParams();
-  const { invokeRoomHubMethod, connectionIsReady } = useRoomHubStore();
+  const { invokeRoomHubMethod, connectionIsReady, addRoomHubHandler } =
+    useRoomHubStore();
   const { authUser, authLoading } = useContext(AuthContext);
   const { setActiveRoomId, activeRoomId, activeRoomUsers, setActiveRoomUsers } =
     useChatStore();
+
+  function getUsers() {
+    invokeRoomHubMethod("GetUsersInRoom", activeRoomId)?.then((users) => {
+      setActiveRoomUsers(users);
+    });
+  }
 
   useEffect(() => {
     if (roomId) setActiveRoomId(roomId);
@@ -31,16 +38,21 @@ function ChatRoom() {
 
   useEffect(() => {
     if (!connectionIsReady || !authUser || !activeRoomId) return;
-    invokeRoomHubMethod("AddUserToRoom", activeRoomId, {
-      id: authUser?.uid,
-      username: authUser?.displayName,
+    invokeRoomHubMethod("JoinRoom", activeRoomId);
+
+    addRoomHubHandler("UserAdded", (user) => {
+      console.log("User added:", user);
+      getUsers();
     });
-    invokeRoomHubMethod("GetUsersInRoom", activeRoomId)?.then((users) => {
-      setActiveRoomUsers(users);
+    addRoomHubHandler("UserRemoved", (user) => {
+      console.log("User removed:", user);
+      getUsers();
     });
+    getUsers();
+
     return () => {
-      console.log("Removing user from room");
-      invokeRoomHubMethod("RemoveUserFromRoom", activeRoomId, authUser?.uid);
+      console.log("Leaving room", activeRoomId);
+      invokeRoomHubMethod("LeaveRoom", activeRoomId);
     };
   }, [activeRoomId, authUser, connectionIsReady]);
 

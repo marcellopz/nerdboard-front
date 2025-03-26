@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import {
+  HttpTransportType,
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from "@microsoft/signalr";
 
 interface RoomHubStore {
   connection: HubConnection | null;
@@ -24,42 +29,63 @@ const useRoomHubStore = create<RoomHubStore>((set, get) => ({
   connection: null,
   connectionIsReady: false,
 
-  connectToRoomHub: (token: string) => {
-    if (!get().connection) {
+  connectToRoomHub: async (token: string) => {
+    try {
+      // Disconnect existing connection if any
+      await get().disconnectFromRoomHub();
+
       const connection = new HubConnectionBuilder()
         .withUrl(import.meta.env.VITE_API_BASE_URL + "/roomHub", {
           accessTokenFactory: () => token,
+          skipNegotiation: true, // Important for WebSocket connections
+          transport: HttpTransportType.WebSockets,
         })
-        .withAutomaticReconnect()
+        .withAutomaticReconnect({
+          nextRetryDelayInMilliseconds: (retryContext) => {
+            // Exponential backoff
+            return Math.min(retryContext.elapsedMilliseconds * 2, 10000);
+          },
+        })
+        .configureLogging(LogLevel.Information)
         .build();
 
-      connection
-        .start()
-        .then(() => {
-          set({ connectionIsReady: connection.state === "Connected" });
-          console.log("RoomHub connection established!");
-        })
-        .catch((err) => {
-          console.error("RoomHub connection failed: ", err);
-          set({ connectionIsReady: false });
-        });
-
+      // Set connection immediately
       set({ connection });
+
+      // Start connection
+      await connection.start();
+      set({ connectionIsReady: true });
+      console.log("RoomHub connection established!");
+
+      // Handle reconnection events
+      connection.onclose((error) => {
+        console.error("Connection closed:", error);
+      });
+
+      connection.onreconnecting((error) => {
+        console.log("Reconnecting due to:", error);
+      });
+
+      connection.onreconnected((connectionId) => {
+        console.log("Reconnected with ID:", connectionId);
+      });
+    } catch (err) {
+      console.error("RoomHub connection failed: ", err);
+      set({ connection: null, connectionIsReady: false });
+      throw err; // Re-throw to handle in component
     }
   },
 
-  disconnectFromRoomHub: () => {
+  disconnectFromRoomHub: async () => {
     const { connection } = get();
     if (connection) {
-      connection
-        .stop()
-        .then(() => {
-          set({ connection: null, connectionIsReady: false });
-          console.log("RoomHub connection stopped!");
-        })
-        .catch((err) =>
-          console.error("Error stopping RoomHub connection: ", err)
-        );
+      try {
+        await connection.stop();
+        set({ connection: null, connectionIsReady: false });
+        console.log("RoomHub connection stopped!");
+      } catch (err) {
+        console.error("Error stopping RoomHub connection: ", err);
+      }
     }
   },
 
