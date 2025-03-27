@@ -1,17 +1,12 @@
-import { Box, Divider, Paper } from "@mui/material";
-import { Navigate, useParams } from "react-router-dom";
+import { Box, Divider, IconButton, Paper } from "@mui/material";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import ChatMemberList from "./ChatMemberList";
 import ChatMessages from "./ChatMessages";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../contexts/authContext";
 import useChatStore from "../../../store/useChatStore";
 import useRoomHubStore from "../../../store/useRoomHubStore";
-
-export type ChatMessage = {
-  message: string;
-  createdAt: string;
-  user: ChatUser;
-};
+import ArrowBack from "@mui/icons-material/ArrowBackIosNew";
 
 export type ChatUser = {
   userId: string;
@@ -20,15 +15,28 @@ export type ChatUser = {
 
 function ChatRoom() {
   const { roomId } = useParams();
-  const { invokeRoomHubMethod, connectionIsReady, addRoomHubHandler } =
-    useRoomHubStore();
+  const {
+    invokeRoomHubMethod,
+    connectionIsReady,
+    addRoomHubHandler,
+    removeRoomHubHandler,
+  } = useRoomHubStore();
   const { authUser, authLoading } = useContext(AuthContext);
-  const { setActiveRoomId, activeRoomId, activeRoomUsers, setActiveRoomUsers } =
-    useChatStore();
+  const {
+    activeRoomId,
+    activeRoomUsers,
+    activeRoomMessages,
+    setActiveRoomId,
+    setActiveRoomUsers,
+    addMessage,
+  } = useChatStore();
+  const [roomLoading, setRoomLoading] = useState(true);
+  const navigate = useNavigate();
 
   function getUsers() {
     invokeRoomHubMethod("GetUsersInRoom", activeRoomId)?.then((users) => {
       setActiveRoomUsers(users);
+      setRoomLoading(false);
     });
   }
 
@@ -40,18 +48,35 @@ function ChatRoom() {
     if (!connectionIsReady || !authUser || !activeRoomId) return;
     invokeRoomHubMethod("JoinRoom", activeRoomId);
 
-    addRoomHubHandler("UserAdded", (user) => {
+    function userAddedHandler(user: ChatUser) {
       console.log("User added:", user);
       getUsers();
-    });
-    addRoomHubHandler("UserRemoved", (user) => {
+    }
+
+    function userRemovedHandler(user: ChatUser) {
       console.log("User removed:", user);
       getUsers();
-    });
+    }
+
+    function messageReceivedHandler(sender: string, message: string) {
+      console.log("Message received:", sender, message);
+      addMessage({
+        message,
+        createdAt: new Date().toISOString(),
+        sender: sender,
+      });
+    }
+
+    addRoomHubHandler("UserAdded", userAddedHandler);
+    addRoomHubHandler("UserRemoved", userRemovedHandler);
+    addRoomHubHandler("ReceiveMessage", messageReceivedHandler);
     getUsers();
 
     return () => {
       console.log("Leaving room", activeRoomId);
+      removeRoomHubHandler("UserAdded", userAddedHandler);
+      removeRoomHubHandler("UserRemoved", userRemovedHandler);
+      removeRoomHubHandler("ReceiveMessage", messageReceivedHandler);
       invokeRoomHubMethod("LeaveRoom", activeRoomId);
     };
   }, [activeRoomId, authUser, connectionIsReady]);
@@ -59,9 +84,8 @@ function ChatRoom() {
   if (!authUser && !authLoading) return <Navigate to="/" />;
 
   return (
-    <div className="p-4 pt-8 md:p-8 z-1 flex justify-center">
-      <Paper
-        className="flex flex-col md:flex-row"
+    <div className="p-4 pt-8 md:p-8 md:pt-4 z-1 flex justify-center">
+      <Box
         sx={{
           maxWidth: "1000px",
           width: "100%",
@@ -69,28 +93,36 @@ function ChatRoom() {
           overflow: "hidden",
         }}
       >
-        <Box className="w-full md:w-1/4">
-          <ChatMemberList users={activeRoomUsers} />
-        </Box>
-        <Divider
-          orientation="vertical"
-          variant="middle"
-          sx={{
-            height: "calc(100% - 16px)",
-            marginTop: "16px",
-            display: { xs: "none", md: "block" },
-          }}
-        />
-        <Box sx={{ flexGrow: 1, display: "flex" }}>
-          <ChatMessages
-            messages={[]}
-            sendMessage={(message) => {
-              // Send message to the chat room
-              console.log(message);
+        <div className="m-2 w-full">
+          <IconButton onClick={() => navigate("/chat")}>
+            <ArrowBack />
+          </IconButton>
+        </div>
+        <Paper className="flex flex-col md:flex-row">
+          <Box className="w-full md:w-1/4">
+            <ChatMemberList users={activeRoomUsers} roomLoading={roomLoading} />
+          </Box>
+          <Divider
+            orientation="vertical"
+            variant="middle"
+            sx={{
+              height: "unset",
+              marginTop: "16px",
+              marginBottom: 0,
+              display: { xs: "none", md: "block" },
             }}
           />
-        </Box>
-      </Paper>
+          <Box sx={{ flexGrow: 1, display: "flex" }}>
+            <ChatMessages
+              messages={activeRoomMessages}
+              sendMessage={(message) => {
+                console.log("Sending message", message);
+                invokeRoomHubMethod("SendMessageToRoom", roomId, message);
+              }}
+            />
+          </Box>
+        </Paper>
+      </Box>
     </div>
   );
 }

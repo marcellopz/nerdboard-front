@@ -1,14 +1,24 @@
-import { Avatar, Box, Divider, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { FunctionComponent } from "react";
 
 interface ChatMemberListProps {
   users: string[] | undefined;
+  roomLoading: boolean;
   // users?: {
   //   [key: string]: ChatUser;
   // };
 }
 
-const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({ users }) => {
+const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
+  users,
+  roomLoading,
+}) => {
   return (
     <Box
       sx={{
@@ -25,7 +35,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({ users }) => {
           fontSize: "1rem",
         }}
       >
-        {users ? users.length : 0} Online
+        {roomLoading ? "Loading..." : `${users ? users.length : 0} Online`}
       </Typography>
       <Divider />
       <Box
@@ -36,6 +46,13 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({ users }) => {
           gap: "8px",
         }}
       >
+        {roomLoading && (
+          <div
+            style={{ display: "flex", justifyContent: "center", marginTop: 8 }}
+          >
+            <CircularProgress size="30px" />
+          </div>
+        )}
         {users &&
           users.map((user) => (
             <Box

@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -11,8 +12,9 @@ import { useNavigate } from "react-router-dom";
 import useChatStore from "../../store/useChatStore";
 
 function ChatRoomsTable() {
-  const { chatRooms } = useChatStore();
+  const { chatRooms, loading } = useChatStore();
   const navigate = useNavigate();
+  console.log(loading);
 
   return (
     <TableContainer component={Paper}>
@@ -26,7 +28,14 @@ function ChatRoomsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {chatRooms.length === 0 && (
+          {loading && (
+            <TableRow>
+              <TableCell colSpan={4} align="center">
+                <CircularProgress />
+              </TableCell>
+            </TableRow>
+          )}
+          {chatRooms.length === 0 && !loading && (
             <TableRow>
               <TableCell colSpan={4} align="center">
                 No rooms found

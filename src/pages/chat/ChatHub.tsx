@@ -11,7 +11,7 @@ import useRoomHubStore from "../../store/useRoomHubStore";
 function ChatHub() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const { authUser, setOpenSignIn, authLoading } = useAuth();
-  const { setChatrooms } = useChatStore();
+  const { setChatrooms, setLoading, resetActiveRoom } = useChatStore();
   const { invokeRoomHubMethod, addRoomHubHandler, connectionIsReady } =
     useRoomHubStore();
   const navigate = useNavigate();
@@ -19,9 +19,14 @@ function ChatHub() {
   function getRooms() {
     console.log("getting rooms");
     invokeRoomHubMethod("GetRooms")?.then((rooms) => {
+      setLoading(false);
       setChatrooms(rooms);
     });
   }
+
+  useEffect(() => {
+    resetActiveRoom();
+  }, []);
 
   useEffect(() => {
     if (!connectionIsReady) return;

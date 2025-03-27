@@ -15,13 +15,9 @@ export interface ChatRoom {
 }
 
 export interface Message {
-  id: string;
   message: string;
   createdAt: string;
-  user: {
-    id: string;
-    username: string;
-  };
+  sender: string;
 }
 
 export interface ChatState {
@@ -30,11 +26,16 @@ export interface ChatState {
   error: any;
   activeRoomId?: string;
   activeRoom?: ChatRoom;
-  activeRoomUsers?: string[];
+  activeRoomUsers: string[];
+  activeRoomMessages: Message[];
+  setLoading: (loading: boolean) => void;
   setChatrooms: (chatRooms: ChatRoom[]) => void;
-  setActiveRoomId: (roomId: string) => void;
-  setActiveRoom: (activeRoom: ChatRoom) => void;
+  setActiveRoomId: (roomId?: string) => void;
+  setActiveRoom: (activeRoom?: ChatRoom) => void;
   setActiveRoomUsers: (activeRoomUsers: string[]) => void;
+  setActiveRoomMessages: (activeRoomMessages: Message[]) => void;
+  addMessage: (message: Message) => void;
+  resetActiveRoom: () => void;
 }
 
 const useChatStore = create<ChatState>()(
@@ -42,9 +43,13 @@ const useChatStore = create<ChatState>()(
     // persist(
     (set, _get) => ({
       chatRooms: [],
-      loading: false,
+      loading: true,
       error: null,
       activeRoom: undefined,
+      activeRoomId: undefined,
+      activeRoomUsers: [],
+      activeRoomMessages: [],
+      setLoading: (loading) => set({ loading }),
       setChatrooms: (chatRooms) => set({ chatRooms }),
       setActiveRoomId: (roomId) => {
         set({ activeRoomId: roomId });
@@ -54,6 +59,22 @@ const useChatStore = create<ChatState>()(
       },
       setActiveRoomUsers: (activeRoomUsers) => {
         set({ activeRoomUsers });
+      },
+      setActiveRoomMessages: (activeRoomMessages) => {
+        set({ activeRoomMessages });
+      },
+      addMessage: (message) => {
+        set((state) => ({
+          activeRoomMessages: [...state.activeRoomMessages!, message],
+        }));
+      },
+      resetActiveRoom: () => {
+        set({
+          activeRoom: undefined,
+          activeRoomId: undefined,
+          activeRoomUsers: [],
+          activeRoomMessages: [],
+        });
       },
     }),
     { name: "chat-storage" }

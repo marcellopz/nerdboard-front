@@ -1,9 +1,9 @@
 import { FunctionComponent, useEffect, useRef } from "react";
-import { ChatMessage } from "../types";
 import { Avatar, Box, TextField, Typography } from "@mui/material";
+import { Message } from "../../../store/useChatStore";
 
 interface ChatMessagesProps {
-  messages: ChatMessage[];
+  messages: Message[];
   sendMessage: (message: string) => void;
 }
 
@@ -47,21 +47,20 @@ const ChatMessages: FunctionComponent<ChatMessagesProps> = ({
         >
           {messages.map((message) => (
             <Box
+              key={message.createdAt}
               sx={{
                 display: "flex",
-                padding: "8px",
-                gap: "8px",
+                padding: "8px 10px",
+                gap: "10px",
                 alignItems: "center",
                 ":hover": {
                   backgroundColor: "rgba(0, 0, 0, 0.03)",
                 },
               }}
             >
-              <Avatar
-                sx={{ width: 32, height: 32 }}
-                alt={message.user.username}
-                src="/static/images/avatar/2.jpg" // implementar avatar
-              />
+              <Avatar sx={{ width: 32, height: 32 }} alt={message.sender}>
+                {message.sender[0]}
+              </Avatar>
               <Box>
                 <Box
                   sx={{
@@ -70,9 +69,7 @@ const ChatMessages: FunctionComponent<ChatMessagesProps> = ({
                     gap: "6px",
                   }}
                 >
-                  <Typography fontWeight={700}>
-                    {message.user.username}
-                  </Typography>
+                  <Typography fontWeight={700}>{message.sender}</Typography>
                   <Typography fontSize={11}>
                     {new Date(message.createdAt).toLocaleTimeString("pt-BR", {
                       hour: "2-digit",
