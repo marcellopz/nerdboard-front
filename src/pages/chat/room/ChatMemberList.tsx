@@ -8,7 +8,7 @@ import {
 import { FunctionComponent } from "react";
 
 interface ChatMemberListProps {
-  users: string[] | undefined;
+  users: any[] | undefined;
   roomLoading: boolean;
   // users?: {
   //   [key: string]: ChatUser;
@@ -19,6 +19,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
   users,
   roomLoading,
 }) => {
+  console.log(users);
   return (
     <Box
       sx={{
@@ -53,7 +54,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
             <CircularProgress size="30px" />
           </div>
         )}
-        {users &&
+        {/* {users &&
           users.map((user) => (
             <Box
               key={user}
@@ -77,12 +78,12 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
                 {user}
               </Typography>
             </Box>
-          ))}
+          ))} */}
         {/* Para quando users for um objeto */}
-        {/* {users &&
+        {users &&
           Object.entries(users).map(([id, user]) => (
             <Box
-              key={user.name}
+              key={user.username}
               sx={{
                 display: "flex",
                 gap: "8px",
@@ -91,7 +92,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
             >
               <Avatar
                 sx={{ width: 32, height: 32 }}
-                alt={user.name}
+                alt={user.username}
                 src="/static/images/avatar/2.jpg" // implementar avatar
               />
               <Typography
@@ -100,10 +101,10 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
                   fontSize: "1rem",
                 }}
               >
-                {user.name}
+                {user.username}
               </Typography>
             </Box>
-          ))} */}
+          ))}
       </Box>
     </Box>
   );

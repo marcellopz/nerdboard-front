@@ -3,8 +3,8 @@ import { devtools } from "zustand/middleware";
 
 // Define types
 export interface ChatRoom {
-  roomId: string;
-  roomName: string;
+  id: string;
+  name: string;
   createdBy: string;
   users: {
     [key: string]: {

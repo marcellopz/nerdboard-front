@@ -36,9 +36,8 @@ function ChatHub() {
       return;
     }
 
-    addRoomHubHandler("RoomCreated", (roomName) => {
-      console.log("Room created", roomName);
-      getRooms();
+    addRoomHubHandler("RoomsUpdated", (rooms) => {
+      setChatrooms(rooms);
     });
     getRooms();
   }, [authUser, authLoading, connectionIsReady]);
@@ -47,8 +46,9 @@ function ChatHub() {
     invokeRoomHubMethod("CreateRoom", roomName, {
       id: authUser?.uid,
       username: authUser?.displayName,
+    })?.then((roomId) => {
+      navigate(`/chat/${roomId}`);
     });
-    navigate(`/chat/${roomName}`);
   }
 
   return (
