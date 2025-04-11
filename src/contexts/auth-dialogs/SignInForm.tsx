@@ -14,10 +14,17 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
     email: "",
     password: "",
   });
+  const [error, setError] = React.useState<string | null>(null);
 
   function handleSubmit() {
-    signInEmailPwd(formState.email, formState.password);
-    onClose();
+    signInEmailPwd(formState.email, formState.password)
+      .then((userCredential) => {
+        onClose();
+      })
+      .catch((error) => {
+        console.error("Error signing in:", error);
+        setError("Invalid email or password. Please try again.");
+      });
   }
 
   return (
@@ -39,6 +46,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
         }}
         noValidate
         autoComplete="off"
+        data-testid="login-form"
       >
         <TextField
           required
@@ -54,6 +62,11 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
               email: e.target.value,
             })
           }
+          slotProps={{
+            htmlInput: {
+              "data-testid": "email-field",
+            },
+          }}
         />
         <TextField
           required
@@ -69,7 +82,17 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
               password: e.target.value,
             })
           }
+          slotProps={{
+            htmlInput: {
+              "data-testid": "password-field",
+            },
+          }}
         />
+        {error && (
+          <Box sx={{ color: "red", mt: 1 }} data-testid="error-message">
+            {error}
+          </Box>
+        )}
       </Box>
     </CustomDialog>
   );

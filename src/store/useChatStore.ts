@@ -1,16 +1,17 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-// Define types
+export type ChatUser = {
+  id: string;
+  username: string;
+};
+
 export interface ChatRoom {
   id: string;
   name: string;
   createdBy: string;
   users: {
-    [key: string]: {
-      id: string;
-      username: string;
-    };
+    [key: string]: ChatUser;
   };
 }
 
@@ -26,13 +27,13 @@ export interface ChatState {
   error: any;
   activeRoomId?: string;
   activeRoom?: ChatRoom;
-  activeRoomUsers: string[];
+  activeRoomUsers: ChatUser[];
   activeRoomMessages: Message[];
   setLoading: (loading: boolean) => void;
   setChatrooms: (chatRooms: ChatRoom[]) => void;
   setActiveRoomId: (roomId?: string) => void;
   setActiveRoom: (activeRoom?: ChatRoom) => void;
-  setActiveRoomUsers: (activeRoomUsers: string[]) => void;
+  setActiveRoomUsers: (activeRoomUsers: ChatUser[]) => void;
   setActiveRoomMessages: (activeRoomMessages: Message[]) => void;
   addMessage: (message: Message) => void;
   resetActiveRoom: () => void;
@@ -41,7 +42,7 @@ export interface ChatState {
 const useChatStore = create<ChatState>()(
   devtools(
     // persist(
-    (set, _get) => ({
+    (set, get) => ({
       chatRooms: [],
       loading: true,
       error: null,
@@ -50,7 +51,15 @@ const useChatStore = create<ChatState>()(
       activeRoomUsers: [],
       activeRoomMessages: [],
       setLoading: (loading) => set({ loading }),
-      setChatrooms: (chatRooms) => set({ chatRooms }),
+      setChatrooms: (chatRooms) => {
+        const { activeRoomId } = get();
+        set({
+          chatRooms,
+          activeRoomUsers: activeRoomId
+            ? Object.values(chatRooms.find((c) => c.id === activeRoomId).users)
+            : [],
+        });
+      },
       setActiveRoomId: (roomId) => {
         set({ activeRoomId: roomId });
       },

@@ -25,15 +25,20 @@ const CustomDialog: React.FC<CustomDialogProps> = ({
   confirmText = "Confirm",
   cancelText = "Cancel",
   confirmEnabled = false,
+  ...rest
 }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} {...rest}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{cancelText}</Button>
         {onConfirm && (
-          <Button onClick={onConfirm} disabled={!confirmEnabled}>
+          <Button
+            onClick={onConfirm}
+            disabled={!confirmEnabled}
+            data-testid="confirm-button"
+          >
             {confirmText}
           </Button>
         )}

@@ -48,18 +48,7 @@ function ChatRoom() {
     if (!connectionIsReady || !authUser || !activeRoomId) return;
     invokeRoomHubMethod("JoinRoom", activeRoomId);
 
-    function userAddedHandler(user: ChatUser) {
-      console.log("User added:", user);
-      getUsers();
-    }
-
-    function userRemovedHandler(user: ChatUser) {
-      console.log("User removed:", user);
-      getUsers();
-    }
-
     function messageReceivedHandler(sender: string, message: string) {
-      console.log("Message received:", sender, message);
       addMessage({
         message,
         createdAt: new Date().toISOString(),
@@ -67,15 +56,10 @@ function ChatRoom() {
       });
     }
 
-    addRoomHubHandler("UserAdded", userAddedHandler);
-    addRoomHubHandler("UserRemoved", userRemovedHandler);
     addRoomHubHandler("ReceiveMessage", messageReceivedHandler);
     getUsers();
 
     return () => {
-      console.log("Leaving room", activeRoomId);
-      removeRoomHubHandler("UserAdded", userAddedHandler);
-      removeRoomHubHandler("UserRemoved", userRemovedHandler);
       removeRoomHubHandler("ReceiveMessage", messageReceivedHandler);
       invokeRoomHubMethod("LeaveRoom", activeRoomId);
     };
@@ -94,7 +78,10 @@ function ChatRoom() {
         }}
       >
         <div className="m-2 w-full">
-          <IconButton onClick={() => navigate("/chat")}>
+          <IconButton
+            data-testid="leave-room-button"
+            onClick={() => navigate("/chat")}
+          >
             <ArrowBack />
           </IconButton>
         </div>
@@ -116,7 +103,6 @@ function ChatRoom() {
             <ChatMessages
               messages={activeRoomMessages}
               sendMessage={(message) => {
-                console.log("Sending message", message);
                 invokeRoomHubMethod("SendMessageToRoom", roomId, message);
               }}
             />

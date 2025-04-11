@@ -10,11 +10,12 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import useChatStore from "../../store/useChatStore";
+import { useAuth } from "../../contexts/authContext";
 
 function ChatRoomsTable() {
+  const { unauthenticated } = useAuth();
   const { chatRooms, loading } = useChatStore();
   const navigate = useNavigate();
-  console.log(loading);
 
   return (
     <TableContainer component={Paper}>
@@ -28,7 +29,18 @@ function ChatRoomsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {loading && (
+          {unauthenticated && (
+            <TableRow>
+              <TableCell
+                colSpan={4}
+                align="center"
+                data-testid="unauthenticated-message"
+              >
+                Please sign in to see the chat rooms
+              </TableCell>
+            </TableRow>
+          )}
+          {!unauthenticated && loading && (
             <TableRow>
               <TableCell colSpan={4} align="center">
                 <CircularProgress />
@@ -37,13 +49,18 @@ function ChatRoomsTable() {
           )}
           {chatRooms.length === 0 && !loading && (
             <TableRow>
-              <TableCell colSpan={4} align="center">
+              <TableCell
+                colSpan={4}
+                align="center"
+                data-testid="no-rooms-message"
+              >
                 No rooms found
               </TableCell>
             </TableRow>
           )}
           {chatRooms.map((row) => (
             <TableRow
+              data-testid={`room-${row.name}`}
               key={row.id}
               sx={{
                 "&:last-child td, &:last-child th": { border: 0 },

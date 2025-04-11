@@ -6,20 +6,17 @@ import {
   Typography,
 } from "@mui/material";
 import { FunctionComponent } from "react";
+import { ChatUser } from "../../../store/useChatStore";
 
 interface ChatMemberListProps {
-  users: any[] | undefined;
+  users: ChatUser[];
   roomLoading: boolean;
-  // users?: {
-  //   [key: string]: ChatUser;
-  // };
 }
 
 const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
   users,
   roomLoading,
 }) => {
-  console.log(users);
   return (
     <Box
       sx={{
@@ -54,32 +51,6 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
             <CircularProgress size="30px" />
           </div>
         )}
-        {/* {users &&
-          users.map((user) => (
-            <Box
-              key={user}
-              sx={{
-                display: "flex",
-                gap: "8px",
-                alignItems: "center",
-              }}
-            >
-              <Avatar
-                sx={{ width: 32, height: 32 }}
-                alt={user}
-                src="/static/images/avatar/2.jpg" // implementar avatar
-              />
-              <Typography
-                color={"primary"}
-                sx={{
-                  fontSize: "1rem",
-                }}
-              >
-                {user}
-              </Typography>
-            </Box>
-          ))} */}
-        {/* Para quando users for um objeto */}
         {users &&
           Object.entries(users).map(([id, user]) => (
             <Box
@@ -100,6 +71,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
                 sx={{
                   fontSize: "1rem",
                 }}
+                data-testid={`user-${user.username}`}
               >
                 {user.username}
               </Typography>

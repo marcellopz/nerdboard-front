@@ -17,7 +17,6 @@ function ChatHub() {
   const navigate = useNavigate();
 
   function getRooms() {
-    console.log("getting rooms");
     invokeRoomHubMethod("GetRooms")?.then((rooms) => {
       setLoading(false);
       setChatrooms(rooms);
@@ -55,10 +54,15 @@ function ChatHub() {
     <>
       <NerdboardBox>
         <Box className="flex justify-between items-center m-4">
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom id="tableTitle">
             Chat Rooms
           </Typography>
-          <Button variant="contained" onClick={() => setCreateDialogOpen(true)}>
+          <Button
+            variant="contained"
+            onClick={() => setCreateDialogOpen(true)}
+            disabled={!authUser}
+            data-testid="create-room-button"
+          >
             Create
           </Button>
         </Box>

@@ -1,3 +1,4 @@
+import React from "react";
 import { useAuth } from "../../contexts/authContext";
 import { Button, Typography, Box } from "@mui/material";
 
@@ -15,11 +16,14 @@ function UserSection() {
             alignItems: "center",
           }}
         >
-          <Typography>{authUser.displayName ?? authUser.email}</Typography>
+          <Typography data-testid="display-name">
+            {authUser.displayName ?? authUser.email}
+          </Typography>
           <Button
             variant="contained"
             color="primary"
             onClick={signOutFromWebsite}
+            data-testid="logout-button"
           >
             Sign Out
           </Button>
@@ -32,6 +36,7 @@ function UserSection() {
           }}
         >
           <Button
+            data-testid="login-button"
             variant="contained"
             color="secondary"
             onClick={() => setOpenSignIn(true)}
@@ -39,6 +44,7 @@ function UserSection() {
             Sign In
           </Button>
           <Button
+            data-testid="signup-button"
             variant="contained"
             color="secondary"
             onClick={() => setOpenSignUp(true)}
