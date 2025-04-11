@@ -42,13 +42,23 @@ function CreateRoomDialog({ open, onClose, onCreate }: CreateRoomDialogProps) {
           fullWidth
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
+          slotProps={{
+            htmlInput: {
+              "data-testid": "room-name-input",
+            },
+          }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleCreate} color="primary" disabled={isCreating}>
+        <Button
+          onClick={handleCreate}
+          color="primary"
+          disabled={isCreating}
+          data-testid="confirm-create-room"
+        >
           Create
         </Button>
       </DialogActions>

@@ -44,6 +44,7 @@ const ChatMessages: FunctionComponent<ChatMessagesProps> = ({
             overflowY: "auto",
           }}
           ref={messagesBoxRef}
+          data-testid="messages-box"
         >
           {messages.map((message) => (
             <Box
@@ -91,14 +92,12 @@ const ChatMessages: FunctionComponent<ChatMessagesProps> = ({
         placeholder="Message"
         autoComplete="off"
         fullWidth
-        inputProps={{
-          sx: {
-            padding: "16px",
-          },
-        }}
-        InputProps={{
-          sx: {
-            padding: 0,
+        slotProps={{
+          htmlInput: {
+            "data-testid": "chat-input",
+            sx: {
+              padding: "16px",
+            },
           },
         }}
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {

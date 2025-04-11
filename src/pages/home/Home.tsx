@@ -7,6 +7,7 @@ function FeatureBox({
   image,
   title,
   redirect_uri,
+  ...rest
 }: {
   image: string;
   title: string;
@@ -35,6 +36,7 @@ function FeatureBox({
           transform: "scale(1.003)",
         },
       }}
+      {...rest}
     >
       <Typography
         sx={{
@@ -57,6 +59,7 @@ const Home: React.FC = () => {
   return (
     <NerdboardBox>
       <Box
+        data-testid="banner"
         sx={{
           maxHeight: "50%",
           borderRadius: "8px",
@@ -85,16 +88,19 @@ const Home: React.FC = () => {
           image="./src/assets/chat-icon.webp"
           title="Chat"
           redirect_uri="/chat"
+          data-testid="chat-icon"
         />
         <FeatureBox
           image="./src/assets/tic-tac-toe-icon.webp"
           title="Tic Tac Toe"
           redirect_uri="/chat"
+          data-testid="tic-tac-toe-icon"
         />
         <FeatureBox
           image="./src/assets/poker-icon.webp"
           title="Poker"
           redirect_uri="/chat"
+          data-testid="poker-icon"
         />
       </Box>
     </NerdboardBox>

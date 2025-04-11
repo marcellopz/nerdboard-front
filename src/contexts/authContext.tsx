@@ -8,6 +8,7 @@ import {
   User,
   updateProfile,
   sendEmailVerification,
+  UserCredential,
   // updateProfile,
 } from "firebase/auth";
 import React, { createContext, useState, useEffect, useContext } from "react";
@@ -29,12 +30,13 @@ interface AuthContextType {
     password: string,
     displayName: string
   ) => void;
-  signInEmailPwd: (email: string, password: string) => void;
+  signInEmailPwd: (email: string, password: string) => Promise<UserCredential>;
   // signInGoogle: () => void;
   authLoading: boolean;
   idToken: string | null;
   setOpenSignIn: (open: boolean) => void;
   setOpenSignUp: (open: boolean) => void;
+  unauthenticated: boolean;
 }
 
 interface AuthProviderProps {
@@ -47,12 +49,15 @@ export const AuthContext = createContext<AuthContextType>({
   authUser: null,
   signOutFromWebsite: () => <Navigate to="/" />,
   signUpEmailPwd: () => {},
-  signInEmailPwd: () => {},
+  signInEmailPwd: async () => {
+    return Promise.reject(new Error("Function not implemented"));
+  },
   // signInGoogle: () => {},
   authLoading: true,
   idToken: null,
   setOpenSignIn: () => {},
   setOpenSignUp: () => {},
+  unauthenticated: true,
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -97,9 +102,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // };
 
   const signInEmailPwd = async (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password).catch((error) => {
-      alert(error.message);
-    });
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const signUpEmailPwd = (
@@ -143,6 +146,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         idToken,
         setOpenSignIn,
         setOpenSignUp,
+        unauthenticated: !authLoading && !authUser,
       }}
     >
       {children}

@@ -11,10 +11,7 @@ interface RoomHubStore {
   connectionIsReady: boolean;
   connectToRoomHub: (token: string) => void;
   disconnectFromRoomHub: () => void;
-  invokeRoomHubMethod: (
-    methodName: string,
-    ...args: any[]
-  ) => Promise<any> | void;
+  invokeRoomHubMethod: (methodName: string, ...args: any[]) => Promise<any>;
   addRoomHubHandler: (
     methodName: string,
     callback: (...args: any[]) => void
@@ -55,7 +52,7 @@ const useRoomHubStore = create<RoomHubStore>((set, get) => ({
       // Start connection
       await connection.start();
       set({ connectionIsReady: true });
-      console.log("RoomHub connection established!");
+      console.info("RoomHub connection established!");
 
       // Handle reconnection events
       connection.onclose((error) => {
@@ -63,11 +60,11 @@ const useRoomHubStore = create<RoomHubStore>((set, get) => ({
       });
 
       connection.onreconnecting((error) => {
-        console.log("Reconnecting due to:", error);
+        console.info("Reconnecting due to:", error);
       });
 
       connection.onreconnected((connectionId) => {
-        console.log("Reconnected with ID:", connectionId);
+        console.info("Reconnected with ID:", connectionId);
       });
     } catch (err) {
       console.error("RoomHub connection failed: ", err);
@@ -82,7 +79,7 @@ const useRoomHubStore = create<RoomHubStore>((set, get) => ({
       try {
         await connection.stop();
         set({ connection: null, connectionIsReady: false });
-        console.log("RoomHub connection stopped!");
+        console.info("RoomHub connection stopped!");
       } catch (err) {
         console.error("Error stopping RoomHub connection: ", err);
       }
