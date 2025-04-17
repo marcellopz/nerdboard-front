@@ -17,8 +17,27 @@
 }
 
 body {
+  background-color: #f9fcfd;
+  color: #1f2d3d;
+  font-family: "Inter", "Segoe UI", sans-serif;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  padding: 0;
+}
+
+input,
+textarea,
+select {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 16px;
+  box-shadow: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(59, 165, 124, 0.25);
 }

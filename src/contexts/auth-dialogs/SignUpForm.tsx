@@ -26,9 +26,9 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
     <CustomDialog
       open={open}
       onClose={onClose}
-      title="Sign Up"
+      title="Registrar"
       onConfirm={handleSubmit}
-      confirmText="Sign Up"
+      confirmText="Registrar"
       confirmEnabled={
         formState.email !== "" &&
         formState.password !== "" &&
@@ -66,7 +66,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
         <TextField
           required
           id="password"
-          label="Password"
+          label="Senha"
           type="password"
           variant="outlined"
           autoComplete="current-password"
@@ -81,7 +81,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
         <TextField
           required
           id="confirm-password"
-          label="Confirm Password"
+          label="Confirmar senha"
           type="password"
           variant="outlined"
           autoComplete="confirm-password"
@@ -97,7 +97,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ open, onClose }) => {
         <TextField
           required
           id="display-name"
-          label="Display Name"
+          label="Nome de exibição"
           variant="outlined"
           autoComplete="display-name"
           value={formState.displayName}

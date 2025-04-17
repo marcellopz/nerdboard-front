@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "../../contexts/authContext";
 import { Button, Typography, Box } from "@mui/material";
 
@@ -25,31 +24,33 @@ function UserSection() {
             onClick={signOutFromWebsite}
             data-testid="logout-button"
           >
-            Sign Out
+            Sair
           </Button>
         </Box>
       ) : (
         <Box
           sx={{
             display: "flex",
-            gap: 2,
+            gap: 3,
           }}
         >
-          <Button
+          <Typography
             data-testid="login-button"
-            variant="contained"
-            color="secondary"
             onClick={() => setOpenSignIn(true)}
+            className="flex flex-col justify-center items-center cursor-pointer"
+            sx={{
+              fontWeight: 500,
+            }}
           >
-            Sign In
-          </Button>
+            Fazer Login
+          </Typography>
           <Button
             data-testid="signup-button"
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={() => setOpenSignUp(true)}
           >
-            Sign Up
+            Registrar
           </Button>
         </Box>
       )}

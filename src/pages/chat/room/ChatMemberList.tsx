@@ -33,7 +33,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
           fontSize: "1rem",
         }}
       >
-        {roomLoading ? "Loading..." : `${users ? users.length : 0} Online`}
+        {roomLoading ? "Carregando..." : `${users ? users.length : 0} Online`}
       </Typography>
       <Divider />
       <Box
@@ -61,11 +61,7 @@ const ChatMemberList: FunctionComponent<ChatMemberListProps> = ({
                 alignItems: "center",
               }}
             >
-              <Avatar
-                sx={{ width: 32, height: 32 }}
-                alt={user.username}
-                src="/static/images/avatar/2.jpg" // implementar avatar
-              />
+              <Avatar sx={{ width: 32, height: 32 }} alt={user.username} />
               <Typography
                 color={"primary"}
                 sx={{

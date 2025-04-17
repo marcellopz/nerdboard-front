@@ -33,13 +33,13 @@ test.describe("Multi-user chat room test", () => {
   test("Visits the chat page", async ({ page }) => {
     await page.goto("/chat");
     await expect(page).toHaveURL(/\/chat/);
-    await expect(page.locator("#tableTitle")).toContainText("Chat Rooms");
+    await expect(page.locator("#tableTitle")).toContainText("Salas de Chat");
   });
 
   test("User cannot access chat room without logging in", async ({ page }) => {
     await page.goto("/chat");
     await expect(page.getByTestId("unauthenticated-message")).toContainText(
-      "Please sign in to see the chat rooms"
+      "Você precisa estar logado para acessar as salas de chat."
     );
   });
 
@@ -52,10 +52,10 @@ test.describe("Multi-user chat room test", () => {
       await page2.goto("/chat");
 
       await expect(page1.getByTestId("no-rooms-message")).toContainText(
-        "No rooms found"
+        "Nenhuma sala de chat encontrada."
       );
       await expect(page2.getByTestId("no-rooms-message")).toContainText(
-        "No rooms found"
+        "Nenhuma sala de chat encontrada."
       );
     });
 

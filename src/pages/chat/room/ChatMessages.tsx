@@ -89,9 +89,15 @@ const ChatMessages: FunctionComponent<ChatMessagesProps> = ({
       <TextField
         id="message"
         variant="filled"
-        placeholder="Message"
+        placeholder="Mensagem"
         autoComplete="off"
         fullWidth
+        sx={{
+          "& .MuiInputBase-root": {
+            borderRadius: "0px",
+            backgroundColor: "#F2F9F6",
+          },
+        }}
         slotProps={{
           htmlInput: {
             "data-testid": "chat-input",

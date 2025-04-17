@@ -23,7 +23,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
       })
       .catch((error) => {
         console.error("Error signing in:", error);
-        setError("Invalid email or password. Please try again.");
+        setError("Email ou senha inválidos.");
       });
   }
 
@@ -31,9 +31,9 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
     <CustomDialog
       open={open}
       onClose={onClose}
-      title="Sign In"
+      title="Fazer Login"
       onConfirm={handleSubmit}
-      confirmText="Sign In"
+      confirmText="Entrar"
       confirmEnabled={formState.email !== "" && formState.password !== ""}
     >
       <Box
@@ -71,7 +71,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ open, onClose }) => {
         <TextField
           required
           id="password"
-          label="Password"
+          label="Senha"
           type="password"
           variant="outlined"
           autoComplete="current-password"

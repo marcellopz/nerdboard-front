@@ -16,23 +16,15 @@ test.describe("Homepage Test", () => {
     await expect(logo).toContainText("NerdBoard");
   });
 
-  test("should show the banner", async ({ page }) => {
-    const banner = page.locator('[data-testid="banner"]');
-    await expect(banner).toBeVisible();
-  });
-
-  test("should show chat, tic-tac-toe, and poker icons", async ({ page }) => {
-    await expect(page.locator('[data-testid="chat-icon"]')).toBeVisible();
-    await expect(
-      page.locator('[data-testid="tic-tac-toe-icon"]')
-    ).toBeVisible();
-    await expect(page.locator('[data-testid="poker-icon"]')).toBeVisible();
+  test("should show the title", async ({ page }) => {
+    const title = page.locator('[data-testid="home-title"]');
+    await expect(title).toContainText("Jogue com amigos online");
   });
 
   test("should navigate to chat page when chat icon is clicked", async ({
     page,
   }) => {
-    await page.locator('[data-testid="chat-icon"]').click();
+    await page.locator('[data-testid="chat-box"]').click();
     await expect(page).toHaveURL(/\/chat/);
   });
 });
