@@ -24,7 +24,7 @@ test.describe("Login test", () => {
     await page.getByTestId("confirm-button").click();
 
     await expect(page.getByTestId("error-message")).toContainText(
-      "Invalid email or password."
+      "Email ou senha inválidos."
     );
   });
 

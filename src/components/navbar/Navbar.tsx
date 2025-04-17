@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
         <Typography variant="h6" style={{ flexGrow: 1 }}>
           <Link
             to="/"
-            style={{ color: "white", textDecoration: "none" }}
+            style={{ fontWeight: "500", textDecoration: "none" }}
             id="nav-logo"
           >
             NerdBoard

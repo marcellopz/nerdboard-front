@@ -55,7 +55,7 @@ function ChatHub() {
       <NerdboardBox>
         <Box className="flex justify-between items-center m-4">
           <Typography variant="h5" gutterBottom id="tableTitle">
-            Chat Rooms
+            Salas de Chat
           </Typography>
           <Button
             variant="contained"
@@ -63,7 +63,7 @@ function ChatHub() {
             disabled={!authUser}
             data-testid="create-room-button"
           >
-            Create
+            Criar
           </Button>
         </Box>
         <ChatRoomsTable />

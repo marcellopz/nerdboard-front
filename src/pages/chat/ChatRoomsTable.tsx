@@ -23,9 +23,9 @@ function ChatRoomsTable() {
         <TableHead sx={{ backgroundColor: "rgba(0,0,0,0.08)" }}>
           <TableRow>
             <TableCell>ID</TableCell>
-            <TableCell>Room name</TableCell>
-            <TableCell>Members</TableCell>
-            <TableCell>Created by</TableCell>
+            <TableCell>Nome da sala</TableCell>
+            <TableCell>Membros</TableCell>
+            <TableCell>Criado por</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -36,7 +36,7 @@ function ChatRoomsTable() {
                 align="center"
                 data-testid="unauthenticated-message"
               >
-                Please sign in to see the chat rooms
+                Você precisa estar logado para acessar as salas de chat.
               </TableCell>
             </TableRow>
           )}
@@ -54,7 +54,7 @@ function ChatRoomsTable() {
                 align="center"
                 data-testid="no-rooms-message"
               >
-                No rooms found
+                Nenhuma sala de chat encontrada.
               </TableCell>
             </TableRow>
           )}
